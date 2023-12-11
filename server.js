@@ -19,6 +19,14 @@ app.get("/greet/:name", (req, res) => {
     })
 })
 
+app.get('/search', (req, res) => {
+    const term = req.query.term
+    res.json({
+        term,
+        results: []
+    })
+})
+
 app.get('/search/:categoryId', (req, res) => {
     const categoryId = req.params.categoryId
     const term = req.query.term
@@ -37,6 +45,7 @@ app.post("/registrace", (req, res) => {
     })
 })
 
+//********************************************************************************/
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
   
@@ -50,7 +59,7 @@ app.post('/login', (req, res) => {
     }
   });
   
-  const verifyToken = (req, res, next) => {
+  const verifyTokenMiddleware = (req, res, next) => {
     const token = req.headers.authorization;
   
     if (!token) {
@@ -67,7 +76,7 @@ app.post('/login', (req, res) => {
     });
   };
   
-  app.get('/protected', verifyToken, (req, res) => {
+  app.get('/protected', verifyTokenMiddleware, (req, res) => {
     res.json({ message: 'This is a protected endpoint', user: req.user });
   });
   
@@ -75,14 +84,7 @@ app.post('/login', (req, res) => {
     res.json({ message: 'This is a public endpoint' });
   });
   
-  app.get('/search', (req, res) => {
-      const term = req.query.term
-      res.json({
-          term,
-          results: []
-      })
-  })
-  
+
 app.listen(5000, () => {
     console.log("server is running")
 })
